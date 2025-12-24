@@ -1,0 +1,46 @@
+name: Build and Deploy to Azure
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  AZURE_WEBAPP_NAME: app-utkuderici-01   # <-- BURAYI KONTROL ET
+  ACR_NAME: acrutkuderici01              # <-- BURAYI KONTROL ET (Hepsi küçük harf)
+  IMAGE_NAME: node-web-app
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    # 1. Azure Login
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    # 2. ACR Login
+    - name: ACR Login
+      uses: azure/docker-login@v1
+      with:
+        login-server: ${{ env.ACR_NAME }}.azurecr.io
+        username: ${{ secrets.REGISTRY_USERNAME }}
+        password: ${{ secrets.REGISTRY_PASSWORD }}
+
+    # 3. Build and Push Docker Image
+    - name: Build and Push Image
+      run: |
+        docker build . -t ${{ env.ACR_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ github.sha }}
+        docker push ${{ env.ACR_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ github.sha }}
+
+    # 4. Deploy to App Service
+    - name: Deploy to Azure Web App
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: ${{ env.AZURE_WEBAPP_NAME }}
+        images: '${{ env.ACR_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ github.sha }}'
