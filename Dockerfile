@@ -22,6 +22,7 @@ COPY . .
 
 # Başlatma scriptini kopyala ve çalıştırma izni ver
 COPY init_container.sh /usr/local/bin/
+RUN sed -i 's/\r$//' /usr/local/bin/init_container.sh
 RUN chmod +x /usr/local/bin/init_container.sh
 
 # Azure App Service SSH Portu (2222) ve Uygulama Portu (3000)
