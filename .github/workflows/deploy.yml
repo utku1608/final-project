@@ -7,8 +7,8 @@ on:
   workflow_dispatch:
 
 env:
-  AZURE_WEBAPP_NAME: app-utkuderici-01   # <-- BURAYI KONTROL ET
-  ACR_NAME: acrutkuderici01              # <-- BURAYI KONTROL ET (Hepsi küçük harf)
+  AZURE_WEBAPP_NAME: app-utkuderici-01   # <-- SENİN APP ADIN
+  ACR_NAME: acrutkuderici01              # <-- SENİN ACR ADIN (HEPSİ KÜÇÜK)
   IMAGE_NAME: node-web-app
 
 jobs:
