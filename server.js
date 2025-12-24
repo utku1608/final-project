@@ -3,14 +3,12 @@ const { Client } = require('pg');
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Veritabanı bağlantı bilgileri
 const dbConfig = {
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: 'postgres',
   port: 5432,
-  // DÜZELTME BURADA:
   ssl: {
     rejectUnauthorized: false
   }
